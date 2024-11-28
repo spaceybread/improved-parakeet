@@ -1,15 +1,25 @@
 import time as t
 import math
 
-n = 100
-sq_n = math.ceil(n ** 0.5)
+n = 293**2
+sq_n = (n ** 0.5)
+print(sq_n)
+ly = []
+lx = []
 
-L = []
+for x in range(1, math.floor(sq_n) // 2 + 1 + 1):
+    lx.append((x, math.sqrt(n - x**2)))
 
-for y in range(sq_n):
-    can_x = math.sqrt(n - y**2)
+for x in range(math.floor(sq_n), math.ceil(sq_n) // 2 + 1, -1):
+    ly.append((x, math.sqrt(n - x**2)))
+
+
+#print(*lx)
+#print(*ly[::-1])
     
-    if can_x == int(can_x):
-        L.append((can_x, y))
-
-print(L)
+for p in lx:
+    for q in ly:
+        if p == q[::-1]:
+            print(p, q)
+        
+    
