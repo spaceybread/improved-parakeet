@@ -1,6 +1,8 @@
 import sys
 import random
 from collections import Counter
+import numpy as np
+import matplotlib.pyplot as plt
 
 def search(n, p, arr, X = 0, L = 10):
     if X == L:
@@ -8,7 +10,7 @@ def search(n, p, arr, X = 0, L = 10):
         print(len(arr) / L)
         x = Counter(arr)
         print(x[0]/len(arr))
-        quit()
+        return x[0]/len(arr)
     lo, hi = 0, p
     
     out = []
@@ -40,7 +42,10 @@ def search(n, p, arr, X = 0, L = 10):
     
     if out[-1] == 1: arr += L_e
     else: arr += L_o
-    search(pow(2, (s_1 + s_2) // 2, p), p, arr, X + 1, L)
+    alpha = 0.5
+    # s = int(min(s_1, s_2) * alpha + max(s_1, s_2) * (1 - alpha))
+    s = s_1 * s_2
+    return search(pow(2, s, p), p, arr, X + 1, L)
          
 
 p = 7382748937 # just some prime I looked up
@@ -50,7 +55,30 @@ try:
 except:
     print("Usage: python3 prg.py <seed> <iterations>")
     quit()
-n = random.randint(1, p)
-full = []
-print("Using seed:", n)
-search(n, p, full, 0, L)
+
+N = 10000
+vals = []
+for x in range(N):
+    n = random.randint(1, p)
+    full = []
+    print("Using seed:", n)
+    vals.append(search(n, p, full, 0, L))
+
+vals.sort()
+S = sum(vals)
+print("Average:", S/N)
+print("Median:", vals[len(vals) >> 1])
+print("Min diff:", abs(0.5 - S/N))
+print("Min:", min(vals), " Max:", max(vals))
+print("SD:", np.std(vals))
+
+coun = []
+
+for x in vals:
+    coun.append(int(x * 10000))
+tab = Counter(coun)
+
+lists = sorted(tab.items())
+x, y = zip(*lists)
+plt.plot(x, y)
+plt.show()
